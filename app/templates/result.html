@@ -1,0 +1,353 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MNEMO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% if results %}
+<div id="cover"></div> <!-- Transparent cover -->
+<video id="video-bg" autoplay loop muted>
+  <source src="{% static 'Starry.mp4' %}" type="video/mp4">
+  Your browser does not support HTML5 video.
+</video>
+
+<div id="top-container">
+  <img src="{% static 'r3a.png' %}" id="logo" style="position: absolute; top: 10px; left: 10px;">
+
+<img id="logo" src="{% static 'logo.png' %}" alt="Logo">
+<button id="download-csv-btn">Download Results</button>
+</div>
+
+<!-- Checkbox container with Font Awesome icons -->
+
+  <div id="checkbox-container">
+    <div class="checkbox-label">
+      <i class="fa fa-file-text-o fa-1x" aria-hidden="true"></i>
+      <label>File Name</label>
+      <input type="checkbox" name="filename-checkbox" checked>
+    </div>
+    <div class="checkbox-label">
+      <i class="fa fa-check-square-o fa-1x" aria-hidden="true"></i>
+      <label>Matched Categories</label>
+      <input type="checkbox" name="matched-categories-checkbox" checked>
+    </div>
+    <div class="checkbox-label">
+      <i class="fa fa-square-o fa-1x" aria-hidden="true"></i>
+      <label>Missing Categories</label>
+      <input type="checkbox" name="missing-categories-checkbox" checked>
+    </div>
+    <div class="checkbox-label">
+      <i class="fa fa-percent fa-1x" aria-hidden="true"></i>
+      <label>Missing Percentage</label>
+      <input type="checkbox" name="not-matched-percent-checkbox" checked>
+    </div>
+    <div class="checkbox-label">
+      <i class="fa fa-bar-chart fa-1x" aria-hidden="true"></i>
+      <label>Result</label>
+      <input type="checkbox" name="result-checkbox" checked>
+    </div>
+  </div>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th class="filename-col">File Name</th>
+        <th class="matched-categories-col">Matched Categories</th>
+        <th class="missing-categories-col">Missing Categories</th>
+        <th class="not-matched-percent-col">Missing Percentage</th>
+        <th class="result-col">Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in results %}
+        <tr>
+          <td class="filename-col">{{ result.file_name }}</td>
+          <td class="matched-categories-col">
+            {% if result.matched %}
+              {% for category, reqs in result.matched.items %}
+                {% if reqs %}
+                  <h3 class="green">{{ category }}</h3>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              None
+            {% endif %}
+          </td>
+          <td class="missing-categories-col">
+            {% if result.not_matched %}
+              {% for category, reqs in result.not_matched.items %}
+                {% if reqs %}
+                  <h3 class="red">{{ category }}</h3>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              None
+            {% endif %}
+          </td>
+          <td class="not-matched-percent-col">{{ result.not_matched_percent }}%</td>
+          <td class="result-col">
+            {% if result.not_matched_percent == 0 %}
+              <div style="display: flex; align-items: center;">
+                <div style="width: 20px; height: 20px; background-color: green; border-radius: 50%; margin-right: 5px;"></div>
+                <h3 style="font-weight: bold;">Pass</h3>
+              </div>
+            {% else %}
+              <div style="display: flex; align-items: center;">
+                <div style="width: 20px; height: 20px; background-color: red; border-radius: 50%; margin-right: 5px;"></div>
+                <h3 style="font-weight: bold;">Fail</h3>
+              </div>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No results found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+<script>
+  document.getElementById("download-csv-btn").addEventListener("click", function() {
+    window.location.href = "{% url 'download_csv' %}";
+  });
+
+  const filenameCheckbox = document.querySelector('input[name="filename-checkbox"]');
+  const matchedCategoriesCheckbox = document.querySelector('input[name="matched-categories-checkbox"]');
+  const missingCategoriesCheckbox = document.querySelector('input[name="missing-categories-checkbox"]');
+  const notMatchedPercentCheckbox = document.querySelector('input[name="not-matched-percent-checkbox"]');
+  const resultCheckbox = document.querySelector('input[name="result-checkbox"]');
+  
+  const filenameCol = document.querySelectorAll('.filename-col');
+  const matchedCategoriesCol = document.querySelectorAll('.matched-categories-col');
+  const missingCategoriesCol = document.querySelectorAll('.missing-categories-col');
+  const notMatchedPercentCol = document.querySelectorAll('.not-matched-percent-col');
+  const resultCol = document.querySelectorAll('.result-col');
+  
+  filenameCheckbox.addEventListener('change', () => {
+    for (let i = 0; i < filenameCol.length; i++) {
+      filenameCol[i].style.display = filenameCheckbox.checked ? 'table-cell' : 'none';
+    }
+  });
+  
+  matchedCategoriesCheckbox.addEventListener('change', () => {
+    for (let i = 0; i < matchedCategoriesCol.length; i++) {
+      matchedCategoriesCol[i].style.display = matchedCategoriesCheckbox.checked ? 'table-cell' : 'none';
+    }
+  });
+  
+  missingCategoriesCheckbox.addEventListener('change', () => {
+    for (let i = 0; i < missingCategoriesCol.length; i++) {
+      missingCategoriesCol[i].style.display = missingCategoriesCheckbox.checked ? 'table-cell' : 'none';
+    }
+  });
+  
+  notMatchedPercentCheckbox.addEventListener('change', () => {
+    for (let i = 0; i < notMatchedPercentCol.length; i++) {
+      notMatchedPercentCol[i].style.display = notMatchedPercentCheckbox.checked ? 'table-cell' : 'none';
+    }
+  });
+  
+  resultCheckbox.addEventListener('change', () => {
+    for (let i = 0; i < resultCol.length; i++) {
+      resultCol[i].style.display = resultCheckbox.checked ? 'table-cell' : 'none';
+    }
+  });      
+</script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    margin-top: 10px;
+    font-size: 12px; /* set the font size for category */
+    font-family: Arial, sans-serif;
+     }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #333333;
+  }
+
+  h3.green {
+    color: white;
+  }
+
+  h3.red {
+    color: white;
+  }
+
+  #download-csv-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    border-radius: 5px; /* adds rounded corners */
+    transition: background-color 0.3s ease; /* adds transition effect to hover */
+  }
+  
+  #download-csv-btn:hover {
+    background-color: #45a049; /* changes background color on hover */
+  }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+
+    }
+  
+    h2 {
+      margin-bottom: 10px;
+    }
+  
+    table {
+      background-color: #333333;
+      color: #fff;
+    }
+  
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+  
+    .green {
+      color: green;
+    }
+  
+    .red {
+      color: red;
+    }
+  
+    #download-csv-btn {
+      margin-bottom: 10px;
+    }
+  
+     
+    .filename-col, .matched-categories-col, .missing-categories-col, .not-matched-percent-col, .result-col {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  
+    .filename-col {
+      width: 20%;
+    }
+  
+    .matched-categories-col, .missing-categories-col {
+      width: 25%;
+    }
+  
+    .not-matched-percent-col, .result-col {
+      width: 25%;
+    }
+
+    #checkbox-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+      padding: 20px 0;
+    }
+    
+    /* Styling for checkbox labels */
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      background-color: #fff;
+      background-color: rgba(255, 255, 255, 0.9); /* Update the background color with 50% opacity */
+    }
+    
+    /* Styling for label text */
+    .checkbox-label label {
+      margin-left: 10px;
+    }
+    
+    .checkbox-label i {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px; /* adjust as needed */
+  }
+    
+    .checkbox-label input[type=checkbox] {
+      margin-right: 10px;
+    }
+    
+
+    
+    .checkbox-label input[type=checkbox]:checked {
+      background-color: #03A9F4;
+    }
+
+    #logo {
+      display: block;
+      margin: 0 auto;
+      max-width: 50px; /* Adjust the max-width as needed */
+  }
+  
+   
+
+  #video-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    object-fit: cover; /* Add this to make video cover the entire container */
+    width: 100%;
+    height: 100%;
+    z-index: -10; /* Add this to position the video element behind other content */
+  }
+
+  #cover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Transparent black */
+    z-index: -5; /* Make sure it sits behind the video */
+  }
+
+  
+
+</style>
+
+
+
+</html>

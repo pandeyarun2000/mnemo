@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My Site{% endblock %}</title>
+    {% block head %}
+        <!-- any additional head content goes here -->
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        <!-- any content for child templates goes here -->
+    {% endblock %}
+</body>
+</html>

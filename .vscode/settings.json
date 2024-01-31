@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/14dd9115-5b25-4377-bfe1-bf38888e16e2/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/r3advisory",
+    "appService.deploySubpath": "alpha"
+}

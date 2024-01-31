@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MNEMO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+      }
+      .container {
+        display: flex;
+        height: 100vh;
+      }
+      .left-column {
+        width: 50%;
+        background-color: rgba(3, 3, 3, 0.7); /* Update the background color with 50% opacity */
+        color: #fff;
+        padding: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .right-column {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 50px;
+      }
+
+
+      h1 {
+        font-size: 36px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      p {
+        font-size: 18px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+        text-align: center;
+      }
+      .left-column i {
+        font-size: 60px;
+        margin-bottom: 20px;
+      }
+      .left-column img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+      }
+      input[type="file"] {
+        margin-bottom: 20px;
+      }
+      button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+      button[type="submit"]:hover {
+        background-color: #3e8e41;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+      
+      label.upload-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #333;
+        color: #fff;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      
+      label.upload-btn:hover {
+        background-color: #555;
+      }
+      
+      label.upload-btn:active {
+        background-color: #111;
+      }
+
+      #logo {
+        display: block;
+        margin: 0 auto;
+        max-width: 50px; /* Adjust the max-width as needed */
+    }
+
+    .right-column {
+      position: relative; /* Add this to establish a new stacking context for absolute positioning */
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 50px;
+      overflow: hidden; /* Add this to hide overflow of video element */
+      background-color: rgba(255, 255, 255, 0.7); /* Update the background color with 50% opacity */
+    }
+    
+    #video-bg {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      object-fit: cover; /* Add this to make video cover the entire container */
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* Add this to position the video element behind other content */
+    }
+    
+      
+    </style>
+
+    <script>
+      function showPleaseWait() {
+        var pleaseWaitElement = document.getElementById("please-wait");
+        pleaseWaitElement.style.display = "block";
+      }
+    </script>
+
+    
+  </head>
+  <body>
+
+    <video id="video-bg" autoplay loop muted>
+      <source src="{% static 'NY.mp4' %}" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+
+    <div class="container">
+      <img src="{% static 'r3a.png' %}" id="logo" style="position: absolute; top: 10px; left: 10px;">
+      <div class="left-column">
+        <i class="fa fa-balance-scale"></i>
+        <h1>Are your contracts meeting the minimum provisions for third-party agreements as mandated by regulatory guidelines?</h1>
+
+      </div>
+
+      <div class="right-column">
+
+
+
+        <img id="logo" src="{% static 'logo.png' %}" alt="Logo">
+        <p>Select your contract document files by clicking on the "Choose Files" button below. You can select multiple files at once.</p>
+        <form method="post" enctype="multipart/form-data" onsubmit="showPleaseWait();">
+          {% csrf_token %}
+          <label for="file" class="upload-btn">Choose Files</label>
+          <input type="file" name="file" id="file" accept="application/pdf" multiple>        
+          
+          <button type="submit">Submit</button>
+        </form>     
+
+        <div id="please-wait" style="display: none; text-align: center;">
+          <p>Please wait...</p>
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script src="https://kit.fontawesome.com/5d17b39456.js" crossorigin="anonymous"></script>
+
+
+
+  </body>
+</html>
+
+
+    
+
+
+

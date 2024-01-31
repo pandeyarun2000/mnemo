@@ -1,0 +1,252 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <title>MNEMO</title>
+        <style> 
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: transparent;
+            }
+            
+            h1 {
+                text-align: center;
+                margin-top: 0px;
+                margin-bottom: 30px;
+                color: #fff;
+                text-shadow: 2px 2px 4px #000000;
+                background-image: url('/templates/background.jpg');
+                background-size: cover;
+                background-position: center;
+                padding: 25px 0;
+                font-family: Arial, sans-serif;
+                font-size: 2rem;
+                line-height: 1.2;
+                font-weight: normal;
+                letter-spacing: -0.05em;
+            }
+            
+            form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background-color: transparent;
+                padding: 30px;
+                border-radius: 0px;
+                box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+                width: 50%;
+                margin: auto;
+                margin-top: 50px;
+                
+            }
+            
+            button[type="submit"] {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin-top: 20px;
+                cursor: pointer;
+                border-radius: 5px;
+                transition: background-color 0.2s ease;
+                z-index: 3; /* Make sure it sits behind the video */
+            }
+            
+            button[type="submit"]:hover {
+                background-color: #3e8e41;
+            }  
+
+            #steps {
+                background-color: rgba(3, 3, 3, 0.8); /* Update the background color with 50% opacity */
+                color: #fff;
+                padding: 50px 0;
+                z-index: 3; /* Make sure it sits behind the video */
+              }
+              
+              #steps h2 {
+                font-size: 32px;
+                margin-bottom: 50px;
+                text-align: center;
+              }
+              
+              .step {
+                text-align: center;
+              }
+              
+              .step i {
+                font-size: 48px;
+                margin-bottom: 20px;
+                display: block;
+              }
+              
+              .step h3 {
+                font-size: 24px;
+                margin-bottom: 10px;
+              }
+              
+              .step p {
+                font-size: 16px;
+              }
+
+              #logo {
+                display: block;
+                margin: 0 auto;
+                max-width: 50px; /* Adjust the max-width as needed */
+            }
+
+            
+            footer p {
+              text-align: center;
+              color: #333; /* This sets the text color to white */
+            }
+
+            
+              
+        </style>
+
+
+
+    </head>
+    <body>
+
+      <div id="cover"></div> <!-- Transparent cover -->
+
+      <video id="video-bg" autoplay loop muted>
+        <source src="{% static 'back1.mp4' %}" type="video/mp4">
+        Your browser does not support HTML5 video.
+      </video>
+
+      <img src="{% static 'r3a.png' %}" id="logo" style="position: absolute; top: 10px; left: 10px;">
+
+
+      <img id="logo" src="{% static 'logo.png' %}" alt="Logo">  
+
+      <h1 class="animated-text">Tired of manually reviewing compliance documents?</h1>
+
+       
+
+    </body>
+
+    <section id="steps">
+        <div class="container">
+          <h2>Get Started with Mnemo in 4 Easy Steps</h2>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="step">
+                <i class="fa fa-cloud-upload"></i>
+                <h3>Step 1</h3>
+                <p>Upload Documents</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="step">
+                <i class="fa fa-cogs"></i>
+                <h3>Step 2</h3>
+                <p>Automated Review</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="step">
+                <i class="fa fa-check-square"></i>
+                <h3>Step 3</h3>
+                <p>Report and Feedback</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="step">
+                <i class="fa fa-download"></i>
+                <h3>Step 4</h3>
+                <p>Download Results</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form action="{% url 'process_pdf' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <button type="submit">Click here to Get Started</button>
+        </form>
+
+        <script>
+            window.onload = function() {
+                var button = document.querySelector('button[type="submit"]');
+                button.addEventListener('mouseenter', function() {
+                    button.style.backgroundColor = '#3e8e41';
+                });
+                button.addEventListener('mouseleave', function() {
+                    button.style.backgroundColor = '#4CAF50';
+                });
+            };
+
+            
+        </script>
+
+        <style>
+          #steps .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+          }
+          
+          #steps .col-md-3 {
+            width: 23%;
+          }
+
+          #video-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            object-fit: cover; /* Add this to make video cover the entire container */
+            width: 100%;
+            height: 100%;
+            z-index: -10; /* Add this to position the video element behind other content */
+          }
+
+          @keyframes text-bulge {
+            0% {
+              transform: scale(0.8);
+            }
+            50% {
+              transform: scale(1.2);
+            }
+            100% {
+              transform: scale(1);
+            }
+          }
+          
+          h1 {
+            animation: text-bulge 2s ease-in-out forwards;
+          }
+          
+          #cover {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7); /* Transparent black */
+            z-index: -1; /* Make sure it sits behind the video */
+          }
+
+        </style>
+      </section>
+      
+      <footer>
+        <p style="text-align:center;">Copyright Ⓒ 2023 r3 Advisory Services. All Rights Reserved.</p>
+
+
+
+</html>
+
+
